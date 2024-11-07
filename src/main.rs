@@ -61,6 +61,7 @@ fn main(){
     check_node_version();
 }
 
+
 fn run_npm(){
     println!("Running npm installing node dependencies...");
 
@@ -163,6 +164,8 @@ fn check_node_version(){
         println!("You have the right version of node :3")
     }
 
+    let user = env::var("USERPROFILE");
+    println!("User Profile: {}", user.unwrap());
     install_node();
 }
 
@@ -170,30 +173,28 @@ fn install_node(){
 
     println!("Node version will be downloaded...");
 
-    // if webbrowser::open("https://nodejs.org/dist/v12.22.12/node-v12.22.12-x64.msi").is_ok() {
-    //     println!("Redirecting to download Node JS");
-    // }
-
-
-
-    // println!("{}", file.metadata().unwrap().len());
-
+    if webbrowser::open("https://nodejs.org/dist/v12.22.12/node-v12.22.12-x64.msi").is_ok() {
+        println!("Redirecting to download Node JS");
+    }
+    let user = env::var("USERPROFILE").unwrap();
+    
+    let node_path = user + "\\Downloads\\node-v12.22.12-x64.msi";
+    
+    println!("Node Path: {}", node_path);
+    
     loop {
-        let mut exit = false;
-        // let file: Option<File> = File::open("C:/Users/ALVAROFE/Downloads/node-v12.22.10-x64.msi");
-            // .expect("Could not open file")
+        
+        let mut file_exist = Path::exists(node_path.as_ref());
 
-        let mut file_exist = Path::exists("C:/Users/ALVAROFE/Downloads/node-v12.22.10-x64.msi".as_ref());
-
-        println!("Trying to find and execute node installer...");
+        // println!("Trying to find and execute node installer...");
         match file_exist {
             true => {
                 let output = Command::new("powershell")
                     .arg("-Command")
-                    .arg("cd C:/Users/ALVAROFE/Downloads/; .\\node-v12.22.10-x64.msi;")
+                    .arg(&node_path)
                     .output()
                     .expect("Failed to execute process");
-                exit = true;
+                
                 println!("Se encontro el archivo :33");
                 if output.status.success() {
                     println!("Fin de execution");
